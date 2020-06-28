@@ -16,7 +16,7 @@ class MainClass {
     string[] monsterNames = {"Vortexstrike","Fogmask","Rustpod","Sorrowscreamer","Volatile Eyes","The Bold Wailer","The Mean Monster","The Lone Phantom Hippo","The Onyx Razor Lion","The Arctic Doom Owl"};
 
     // Intro to Ryskim
-    while (exitIntro == false) 
+    while (exitIntro == false)  
     {
       clear();
       Console.WriteLine("Welcome to the world of Ryskim!");

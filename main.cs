@@ -5,13 +5,8 @@ class MainClass {
   
   public static void Main (string[] args) 
   {
-    string playerName = "Player";
-    int money = 10;
-    int playerAttack = 10;
-    int playerHP = 10;
-    int playerMaxHP = 10;
-    int xp = 0;
-    int maxXP = 10;
+    // Create player object
+    Player player = new Player();
     bool exitIntro = false;
 
 
@@ -26,8 +21,8 @@ class MainClass {
       Console.WriteLine("Welcome to the world of Ryskim!");
       Console.WriteLine("What is your name fellow traveler?");
       // Get name of player
-      playerName = Console.ReadLine();
-      print("welcome to Ryskim " + playerName + ".");
+      player.name = Console.ReadLine();
+      print($"welcome to Ryskim {player.name}");
       Console.Clear();
 
       // Exiting intro
@@ -43,7 +38,7 @@ class MainClass {
       
       string menuChoice;
       // Dash board
-      printStats(playerName, money, xp, maxXP);
+      printStats(player.name, player.money, player.xp, player.maxXp);
 
       print("\nWhere would you like to go?");
 
@@ -79,21 +74,21 @@ class MainClass {
             // Creating all enemy variables
             int randomNumber = random(monsterNames.Length);
             string enemyName = monsterNames[randomNumber]; // Creating monster name
-            int hp = random(playerMaxHP, 5); // Generating enemy health
+            int hp = random(player.maxHp, 5); // Generating enemy health
             int maxHP = hp;
             int attack = random(hp/2 + 1, 1);
             print("Enemy Name:" + enemyName + " | Enemy HP:" + hp.ToString() + " | Enemy Attack:" + attack);
             Console.ReadKey();
-            while (hp > 0 & playerHP > 0)
+            while (hp > 0 & player.hp > 0)
             {
               clear();
   
               // Generate random hits based on both attack levels
-              int playerHit = random(playerAttack, 1 );
+              int playerHit = random(player.attack, 1 );
               int enemyHit = random(attack, 1);
               
               // Print battle stats 
-              print($"{playerName} HP:{playerHP}|{playerMaxHP}  /  {enemyName} HP:{hp}|{maxHP}");
+              print($"{player.name} HP:{player.hp}|{player.maxHp}  /  {enemyName} HP:{hp}|{maxHP}");
               hp -= playerHit;
               print("You hit a " + playerHit + ".");
               // Check if enemy is dead
@@ -106,7 +101,7 @@ class MainClass {
 
               // Deal damage to both opponents
               
-              playerHP -= enemyHit;
+              player.hp -= enemyHit;
 
               Console.ReadKey();
             }
@@ -125,33 +120,33 @@ class MainClass {
               print($"You gained {addXP} XP!");
               
               // Add xp and coins to player
-              xp += addXP;
-              money += addCoins;
+              player.xp += addXP;
+              player.money += addCoins;
 
               // Player levels up
-              if (xp >= maxXP)
+              if (player.xp >= player.maxXp)
               {
                 // Level up attack & hp
-                playerAttack += 1;
-                playerMaxHP += 1;
+                player.attack += 1;
+                player.maxHp += 1;
 
                 // Change maxXP and keep leftover xp
                 int leftoverXP = 0;
-                if (xp > maxXP)
+                if (player.xp > player.maxXp)
                 {
-                  leftoverXP = xp - maxXP;
+                  leftoverXP = player.xp - player.maxXp;
                 }
-                xp = leftoverXP;
-                maxXP += 10;
+                player.xp = leftoverXP;
+                player.maxXp += 10;
                 
                 
-                print($"Contratulations, you leveled up attack to {playerAttack} and hp to {playerHP}.");
-                print($"debug: attack:{playerAttack}  HP:{playerMaxHP}   maxXP:{maxXP}   xp:{xp}   ");
+                print($"Contratulations, you leveled up attack to {player.attack} and hp to {player.hp}.");
+                print($"debug: attack:{player.attack}  HP:{player.maxHp}   maxXP:{player.maxXp}   xp:{player.xp}   ");
                 Console.ReadKey();
               }
 
               // Adding coins to player
-              money += addCoins;
+              player.money += addCoins;
 
             }
             else // You died
@@ -184,10 +179,10 @@ class MainClass {
       
   }
   // Functions
-  public static void printStats(string name, int money, int xp, int maxXP)
+  public static void printStats(string name, int money, int xp, int maxXp)
   {
     Console.WriteLine("- - - - - - - - - - - - - - - - - - - ");
-    Console.WriteLine($"|{name} | ${money} | XP:{xp}/{maxXP}");
+    Console.WriteLine($"|{name} | ${money} | XP:{xp}/{maxXp}");
     Console.WriteLine("- - - - - - - - - - - - - - - - - - - ");
   }
 
@@ -214,17 +209,17 @@ class MainClass {
 
 class Player {
 
-    string name = "Player";
-    int money = 10;
-    int attack = 10;
-    int hp = 10;
-    int maxHp = 10;
-    int xp = 0;
-    int maxXp = 10;
+    public string name = "Player";
+    public int money = 10;
+    public int attack = 10;
+    public int hp = 10;
+    public int maxHp = 10;
+    public int xp = 0;
+    public int maxXp = 10;
 
-    Player(string playerName)
+    public Player()
     {
-      name = playerName;
+      // stuff
     }
     
 }

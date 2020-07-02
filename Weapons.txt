@@ -1,0 +1,7 @@
+Basic Sword,1,5
+Basic Axe,2,10
+Long Sword,3,15
+Big Axe,4,20
+Bigger Axe,5,25
+Even Bigger Axe,6,30
+The Shlong,100,100

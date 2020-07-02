@@ -1,17 +1,25 @@
 using System;
-
-
+using System.IO;
+using System.Collections.Generic;
 class MainClass {
   
   public static void Main (string[] args) 
   {
+    // Test code
+
+
+
+    // Initalize all items
+    List<Weapon> weaponList = weaponInitialize();
+    
+    Console.ReadKey();
     // Create player object
     Player player = new Player();
     bool exitIntro = false;
 
 
 
-    // Dungeon variables
+    // Monster Names
     string[] monsterNames = {"Vortexstrike","Fogmask","Rustpod","Sorrowscreamer","Volatile Eyes","Bold Wailer","Mean Monster","Lone Phantom Hippo","Onyx Razor Lion","Arctic Doom Owl"};
 
     // Intro to Ryskim
@@ -167,11 +175,21 @@ class MainClass {
       }
       else if (menuChoice == "2") // The store
       {
+        clear();
         bool exitStore = false;
+        print("Welcome to the weapon store, to buy a weapon type the number associated with it.");
+        print("------------------------\n");
         while (!exitStore)
         {
-          print("Welcome to the General Store, how may I help ya?");
+          for (int i = 0; i < weaponList.Count; i++)
+          {
+            
+            print($"{i + 1}.{weaponList[i].name}  |  ATTK:{weaponList[i].attack}  |  ${weaponList[i].price}\n");
+          }
           Console.ReadKey();
+
+
+          
         }
 
       }
@@ -204,6 +222,43 @@ class MainClass {
 
       return number;
   }
+  public static List<Weapon>  weaponInitialize()
+  {
+    // File name
+    string filepath = "Weapons.txt";
+    
+    // Reading lines of text in file and putting in Array
+    string[] lines = File.ReadAllLines(filepath);
+
+    // Creating weapon List
+    List<Weapon> listOfWeapons = new List<Weapon>();
+
+    // Going through each line in the file
+    for (int i = 0; i < lines.Length; i++)
+    {
+      // Weapon Variables
+      string name = "";
+      int attack = 0;
+      int price = 0;
+
+      // Splitting each line on the comma
+      string[] singleLine = lines[i].Split(",");
+
+      // Sorting the data to create the object of the weapon
+      for (int e = 0; e < singleLine.Length;e++)
+      {
+        name = singleLine[0];
+        attack = Convert.ToInt32(singleLine[1]);
+        price = Convert.ToInt32(singleLine[2]);
+
+      }
+      // Creating the object
+      Weapon newWeapon = new Weapon(name,attack,price);
+      listOfWeapons.Add(newWeapon);
+    }
+    return listOfWeapons;
+    
+  }
 
 }
 
@@ -219,7 +274,7 @@ class Player {
 
     public Player()
     {
-      // stuff
+      // Initialize
     }
     
 }

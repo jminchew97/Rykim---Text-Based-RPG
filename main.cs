@@ -186,8 +186,17 @@ class MainClass {
             
             print($"{i + 1}.{weaponList[i].name}  |  ATTK:{weaponList[i].attack}  |  ${weaponList[i].price}\n");
           }
-          Console.ReadKey();
 
+          int userChoice = Convert.ToInt32(Console.ReadLine());
+
+          if (userChoice == 0)
+          {
+            break;
+          }
+          else {
+
+            Console.WriteLine(weaponList[userChoice - 1].name);
+          }
 
           
         }

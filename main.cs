@@ -46,7 +46,7 @@ class MainClass {
       
       string menuChoice;
       // Dash board
-      printStats(player.name, player.money, player.xp, player.maxXp);
+      printStats(player.name, player.money, player.xp, player.maxXp, player.weaponSlot.name);
 
       print("\nWhere would you like to go?");
 
@@ -175,12 +175,14 @@ class MainClass {
       }
       else if (menuChoice == "2") // The store
       {
-        clear();
+        
         bool exitStore = false;
-        print("Welcome to the weapon store, to buy a weapon type the number associated with it.");
-        print("------------------------\n");
+        
         while (!exitStore)
         {
+          clear();
+          print("Welcome to the weapon store, to buy a weapon type the number associated with it.");
+          print("------------------------\n");
           for (int i = 0; i < weaponList.Count; i++)
           {
             
@@ -194,8 +196,21 @@ class MainClass {
             break;
           }
           else {
+            // PLayer trys to buy a weapon
+            if (player.money >= weaponList[userChoice - 1].price) // Checks if player has enough money
+            {
+              // Put weapon in player weapon slot
+              player.weaponSlot = weaponList[userChoice - 1];
+              player.money -= weaponList[userChoice - 1].price;
+              Console.WriteLine($"You bought a {weaponList[userChoice - 1].name} for {weaponList[userChoice - 1].price} coins.");
+              
+            }
+            else{
+              Console.WriteLine($"You only have {player.money} coins and {weaponList[userChoice - 1].name} costs {weaponList[userChoice - 1].price}.");
+            }
+            Console.ReadKey();
+            break;
 
-            Console.WriteLine(weaponList[userChoice - 1].name);
           }
 
           
@@ -205,11 +220,14 @@ class MainClass {
     }
       
   }
+  //
   // Functions
-  public static void printStats(string name, int money, int xp, int maxXp)
+  public static void printStats(string name, int money, int xp, int maxXp, string weapon)
   {
+    
+    
     Console.WriteLine("- - - - - - - - - - - - - - - - - - - ");
-    Console.WriteLine($"|{name} | ${money} | XP:{xp}/{maxXp}");
+    Console.WriteLine($"|{name} | ${money} | XP:{xp}/{maxXp} | WEAPON:{weapon}");
     Console.WriteLine("- - - - - - - - - - - - - - - - - - - ");
   }
 
@@ -280,7 +298,7 @@ class Player {
     public int maxHp = 10;
     public int xp = 0;
     public int maxXp = 10;
-
+    public Weapon weaponSlot = new Weapon("None", 0, 0);
     public Player()
     {
       // Initialize

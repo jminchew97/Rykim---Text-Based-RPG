@@ -1,12 +1,13 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
+using System.Threading;
 class MainClass {
   
   public static void Main (string[] args) 
   {
     // Test code
-
+    
 
 
     // Initalize all items
@@ -46,7 +47,7 @@ class MainClass {
       
       string menuChoice;
       // Dash board
-      printStats(player.name, player.money, player.xp, player.maxXp, player.weaponSlot.name);
+      printStats(player);
 
       print("\nWhere would you like to go?");
 
@@ -92,26 +93,50 @@ class MainClass {
               clear();
   
               // Generate random hits based on both attack levels
-              int playerHit = random(player.attack, 1 );
-              int enemyHit = random(attack, 1);
+              int playerHit = random(player.attack, 0 );
+              int enemyHit = random(attack, 0);
+              int weaponBonus = random(player.weaponSlot.attack + 1, 0); // Weapon bonus
               
+              // Add weapon bonus to player hit
+              playerHit += weaponBonus;
+
               // Print battle stats 
               print($"{player.name} HP:{player.hp}|{player.maxHp}  /  {enemyName} HP:{hp}|{maxHP}");
+              
+              // Take away health from enemy
               hp -= playerHit;
-              print("You hit a " + playerHit + ".");
-              // Check if enemy is dead
-              if (hp <= 0)
+              
+              // Check if player has a weapon
+              
+              if (weaponBonus > 0 && player.weaponSlot.name != "None")
               {
-                break;
+                print($"You hit a {playerHit} with a weapon bonus of {weaponBonus}.");
+              }
+              else
+              {
+                print($"You hit a {playerHit}.");
               }
               
-              print(enemyName + " hit a " + enemyHit + ".");
-
-              // Deal damage to both opponents
+              {
+                
+                
+              }
               
+              // Check if enemy is dead
+              
+              
+              
+              
+              // if Monster hp is at or below zero exit battle
+              if (hp <= 0)
+              {
+                Console.ReadKey();
+                break;
+              }
+              print(enemyName + " hit a " + enemyHit + ".");
               player.hp -= enemyHit;
-
               Console.ReadKey();
+              
             }
             
             // One of the opponents died in battle
@@ -123,8 +148,8 @@ class MainClass {
               // Generating coins
               int addCoins = random(attack);
 
-              print($"You killed a {enemyName}");
-              print($"{enemyName} dropped {addCoins} coins.");
+              print($"You killed a {enemyName}.");
+              print($"{enemyName} dropped {addCoins} coin.");
               print($"You gained {addXP} XP!");
               
               // Add xp and coins to player
@@ -217,17 +242,62 @@ class MainClass {
         }
 
       }
+      else if (menuChoice == "3")
+      {
+        
+        
+        while (true)
+        {
+          clear();
+          printStats(player);
+          
+          print("\nWelcome to the forest, where you can cut trees for money!");
+          print("0.Leave Forest\n1.Cut Logs\n2.Sell Logs");
+          string userChoice = Console.ReadLine();
+
+          if (userChoice == "0")
+          {
+            print("See ya, come back some time and cut. Lord knows we need the help.");
+            Console.ReadKey();
+            break;
+          }
+          else if (userChoice == "1")
+          {
+            cutLogs(player);
+          }
+          else if (userChoice == "2")
+          {
+            //Sell Logs
+            if (player.logs == 0)
+            {
+              print("You have no logs to sell, quit wasting my time.");
+              Console.ReadKey();
+              break;
+            }
+            int moneyForLogs = player.logs + random(player.logs, 0);
+            player.money += moneyForLogs;
+            print($"I'll give ya {moneyForLogs} for ye logs.");
+            player.logs = 0;
+            Console.ReadKey();
+            break;
+          }
+
+          // chop or sell logs
+
+
+        }
+      }
     }
       
   }
   //
   // Functions
-  public static void printStats(string name, int money, int xp, int maxXp, string weapon)
+  public static void printStats(Player player)
   {
     
     
     Console.WriteLine("- - - - - - - - - - - - - - - - - - - ");
-    Console.WriteLine($"|{name} | ${money} | XP:{xp}/{maxXp} | WEAPON:{weapon}");
+    Console.WriteLine($"|{player.name} | ${player.money} | XP:{player.xp}/{player.maxXp} | WEAPON:{player.weaponSlot.name} | |  Woodcutting: LVL{player.woodcutting} | Logs:{player.logs}/{player.maxLogs}");
     Console.WriteLine("- - - - - - - - - - - - - - - - - - - ");
   }
 
@@ -286,6 +356,64 @@ class MainClass {
     return listOfWeapons;
     
   }
+  public static void cutLogs(Player player)
+  {
+    clear();
+    int logsCut;
+    int logCounter = 0;
+    while (true)
+    {
+      
+      if (player.logs >= player.maxLogs)
+      {
+        player.logs = player.maxLogs;
+
+        print($"You can only carry {player.maxLogs}, you cant cut anymore. Go sell your logs.");
+        Console.ReadKey();
+        break;
+
+      }
+      if (logCounter == 5)
+      {
+        clear();
+        printStats(player);
+        logCounter = 0;
+        print("Hit enter to cut another round or 0 to quit.");
+        string userChoice = Console.ReadLine();
+
+        if (userChoice == "0")
+        {
+          break;
+        }
+        
+      }
+      logsCut = random(player.woodcutting + 1, 0);
+      
+      // Player successfully cut a log
+      if (logsCut >0)
+      {
+        player.logs += logsCut;
+        player.woodcutXp += 1;
+
+
+      }
+      print($"You cut {logsCut} logs.");
+      Thread.Sleep(1000);
+      
+      if (player.woodcutXp >= player.woodcutMax)
+      {
+        clear();
+        player.woodcutting += 1;
+        print($"Congradulations you leveled up woodcutting to {player.woodcutting}");
+        player.woodcutXp = 0;
+        player.woodcutMax += 5;
+        player.maxLogs += 5;
+        Console.ReadKey();
+      }
+      logCounter += 1;
+    }
+  }
+  
 
 }
 
@@ -298,6 +426,11 @@ class Player {
     public int maxHp = 10;
     public int xp = 0;
     public int maxXp = 10;
+    public int woodcutting = 1;
+    public int woodcutXp = 0;
+    public int woodcutMax = 10;
+    public int maxLogs = 5;
+    public int logs = 0;
     public Weapon weaponSlot = new Weapon("None", 0, 0);
     public Player()
     {
